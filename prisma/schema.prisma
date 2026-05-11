@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  TAXPAYER
+  AGENT
+  GOV_OFFICER
+  ADMIN
+}
+
+enum DeclarationStatus {
+  DRAFT
+  SUBMITTED
+}
+
+enum CollectionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum RemittanceStatus {
+  OPEN
+  SUBMITTED
+  CONFIRMED
+  DISPUTED
+}
+
+enum ComplianceStatus {
+  COMPLIANT
+  NON_FILER
+  OUTSTANDING
+  UNDER_REVIEW
+}
+
+enum TaxPeriodType {
+  MONTHLY
+  QUARTERLY
+  ANNUAL
+}
+
+// ---------------------------------------------------------------------------
+// Identity
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  taxpayer     Taxpayer?
+  agent        Agent?
+
+  createdTaxPeriods TaxPeriod[]
+  createdTaxRules   TaxRule[]
+  confirmedRemittances Remittance[]
+
+  @@map("users")
+}
+
+model Taxpayer {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  tin          String   @unique
+  businessName String
+  sector       String
+  status       String
+  lastSyncedAt DateTime @default(now())
+
+  declarations     Declaration[]
+  collections      Collection[]
+  complianceRecords ComplianceRecord[]
+
+  @@map("taxpayers")
+}
+
+// ---------------------------------------------------------------------------
+// Tax Engine
+// ---------------------------------------------------------------------------
+
+model TaxPeriod {
+  id              String        @id @default(uuid())
+  name            String
+  type            TaxPeriodType
+  startDate       DateTime
+  endDate         DateTime
+  filingDeadline  DateTime
+  taxTypes        String[]
+  isActive        Boolean       @default(true)
+  createdById     String
+  createdBy       User          @relation(fields: [createdById], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  declarations      Declaration[]
+  taxRules          TaxRule[]
+  complianceRecords ComplianceRecord[]
+
+  @@map("tax_periods")
+}
+
+model TaxRule {
+  id              String   @id @default(uuid())
+  taxType         String
+  name            String
+  condition       Json
+  rate            Decimal? @db.Decimal(5, 2)
+  flatAmount      Decimal? @db.Decimal(12, 2)
+  applicableFrom  DateTime
+  applicableTo    DateTime?
+  priority        Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdById     String
+  createdBy       User     @relation(fields: [createdById], references: [id])
+  taxPeriodId     String?
+  taxPeriod       TaxPeriod? @relation(fields: [taxPeriodId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("tax_rules")
+}
+
+// ---------------------------------------------------------------------------
+// Business Operations
+// ---------------------------------------------------------------------------
+
+model Declaration {
+  id                  String            @id @default(uuid())
+  taxpayerId          String
+  taxpayer            Taxpayer          @relation(fields: [taxpayerId], references: [id])
+  taxPeriodId         String
+  taxPeriod           TaxPeriod         @relation(fields: [taxPeriodId], references: [id])
+  status              DeclarationStatus @default(DRAFT)
+  calculatedTaxAmount Decimal?          @db.Decimal(15, 2)
+  taxBreakdown        Json?
+  supportingDocuments String[]
+  submittedAt         DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  collections       Collection[]
+  complianceRecords ComplianceRecord[]
+
+  @@unique([taxpayerId, taxPeriodId])
+  @@map("declarations")
+}
+
+// ---------------------------------------------------------------------------
+// Agents
+// ---------------------------------------------------------------------------
+
+model Agent {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  assignedZone String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  collections  Collection[]
+  remittances  Remittance[]
+
+  @@map("agents")
+}
+
+model Collection {
+  id              String           @id @default(uuid())
+  agentId         String
+  agent           Agent            @relation(fields: [agentId], references: [id])
+  declarationId   String
+  declaration     Declaration      @relation(fields: [declarationId], references: [id])
+  taxpayerId      String
+  taxpayer        Taxpayer         @relation(fields: [taxpayerId], references: [id])
+  amount          Decimal          @db.Decimal(15, 2)
+  method          String
+  referenceNumber String           @unique
+  status          CollectionStatus @default(PENDING)
+  collectedAt     DateTime?
+  receiptUrl      String?
+  remittanceId    String?
+  remittance      Remittance?      @relation(fields: [remittanceId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  complianceRecords ComplianceRecord[]
+
+  @@map("collections")
+}
+
+model Remittance {
+  id              String           @id @default(uuid())
+  agentId         String
+  agent           Agent            @relation(fields: [agentId], references: [id])
+  status          RemittanceStatus @default(OPEN)
+  totalAmount     Decimal          @db.Decimal(15, 2)
+  collectionCount Int              @default(0)
+  submittedAt     DateTime?
+  confirmedById   String?
+  confirmedBy     User?            @relation(fields: [confirmedById], references: [id])
+  confirmedAt     DateTime?
+  note            String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  collections Collection[]
+
+  @@map("remittances")
+}
+
+// ---------------------------------------------------------------------------
+// Gov & Compliance
+// ---------------------------------------------------------------------------
+
+model ComplianceRecord {
+  id            String           @id @default(uuid())
+  taxpayerId    String
+  taxpayer      Taxpayer         @relation(fields: [taxpayerId], references: [id])
+  taxPeriodId   String
+  taxPeriod     TaxPeriod        @relation(fields: [taxPeriodId], references: [id])
+  status        ComplianceStatus @default(UNDER_REVIEW)
+  declarationId String?
+  declaration   Declaration?     @relation(fields: [declarationId], references: [id])
+  collectionId  String?
+  collection    Collection?      @relation(fields: [collectionId], references: [id])
+  flaggedAt     DateTime?
+  resolvedAt    DateTime?
+  note          String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@unique([taxpayerId, taxPeriodId])
+  @@map("compliance_records")
+}

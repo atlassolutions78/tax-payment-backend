@@ -172,7 +172,6 @@ interface TaxStrategy {
 interface TaxContext {
   taxpayer: TaxpayerProfile;
   period: TaxPeriod;
-  declaredIncome: number;
 }
 ```
 
@@ -516,19 +515,11 @@ Scheduled job fires after a TaxPeriod deadline
 Create a `.env` file at the project root:
 
 ```env
-# Own database
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_NAME=tax_payment_db
-DATABASE_USER=postgres
-DATABASE_PASSWORD=secret
+# Own database (Prisma — hosted on Render)
+DATABASE_URL=postgresql://user:password@host:5432/tax_payment_db
 
 # Business registry database (read-only)
-REGISTRY_DB_HOST=registry-host
-REGISTRY_DB_PORT=5432
-REGISTRY_DB_NAME=business_registry
-REGISTRY_DB_USER=readonly_user
-REGISTRY_DB_PASSWORD=readonly_secret
+REGISTRY_DATABASE_URL=postgresql://readonly_user:password@host:5432/business_registry
 
 JWT_SECRET=your-secret-key
 JWT_EXPIRES_IN=7d
