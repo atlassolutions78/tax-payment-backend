@@ -15,41 +15,65 @@ export class DeclarationsRepository {
     });
   }
 
-  findByTaxpayer(taxpayerId: string) {
-    return this.prisma.declaration.findMany({
-      where: { taxpayerId },
-      include: withPeriod,
-      orderBy: { createdAt: 'desc' },
-    });
+  async findByTaxpayer(
+    taxpayerId: string,
+    filters: {
+      status?: string;
+      taxType?: string;
+      taxPeriodId?: string;
+      isLate?: boolean;
+    },
+    pagination: { page: number; limit: number },
+  ) {
+    const where = {
+      taxpayerId,
+      ...(filters.status && { status: filters.status as never }),
+      ...(filters.taxType && { taxType: filters.taxType }),
+      ...(filters.taxPeriodId && { taxPeriodId: filters.taxPeriodId }),
+      ...(filters.isLate !== undefined && { isLate: filters.isLate }),
+    };
+
+    const [data, total] = await Promise.all([
+      this.prisma.declaration.findMany({
+        where,
+        include: withPeriod,
+        orderBy: { createdAt: 'desc' },
+        skip: (pagination.page - 1) * pagination.limit,
+        take: pagination.limit,
+      }),
+      this.prisma.declaration.count({ where }),
+    ]);
+
+    return { data, total, page: pagination.page, limit: pagination.limit };
   }
 
-  findByTaxpayerAndPeriod(taxpayerId: string, taxPeriodId: string) {
+  findByTaxpayerAndPeriod(taxpayerId: string, taxPeriodId: string, taxType: string) {
     return this.prisma.declaration.findUnique({
-      where: { taxpayerId_taxPeriodId: { taxpayerId, taxPeriodId } },
+      where: { taxpayerId_taxPeriodId_taxType: { taxpayerId, taxPeriodId, taxType } },
     });
   }
 
   create(data: {
     taxpayerId: string;
     taxPeriodId: string;
+    taxType: string;
     calculatedTaxAmount: Prisma.Decimal;
+    penaltyAmount: number;
+    isLate: boolean;
     taxBreakdown: object;
   }) {
     return this.prisma.declaration.create({
       data: {
         taxpayerId: data.taxpayerId,
         taxPeriodId: data.taxPeriodId,
+        taxType: data.taxType,
+        status: 'SUBMITTED',
+        submittedAt: new Date(),
         calculatedTaxAmount: data.calculatedTaxAmount,
+        penaltyAmount: data.penaltyAmount,
+        isLate: data.isLate,
         taxBreakdown: data.taxBreakdown,
       },
-      include: withPeriod,
-    });
-  }
-
-  submit(id: string) {
-    return this.prisma.declaration.update({
-      where: { id },
-      data: { status: 'SUBMITTED', submittedAt: new Date() },
       include: withPeriod,
     });
   }

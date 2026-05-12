@@ -13,6 +13,8 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg(pool),
 });
 
+const SUPPORTED_TAX_TYPES = ['VAT', 'PAYE', 'WHT', 'CIT', 'TOT'];
+
 async function main() {
   console.log('Seeding database for North Kivu Tax System...');
 
@@ -100,77 +102,76 @@ async function main() {
 
   // ---------------------------------------------------------------------------
   // Taxpayer Users + Profiles
-  // Sectors reflect North Kivu's economy: mining, agriculture, trade, hospitality
   // ---------------------------------------------------------------------------
   const taxpayerData = [
     {
-      tin: 'NK-2021-00123',
+      tin: '10438428427',
       businessName: 'Société Minière du Kivu SARL',
       sector: 'MINING',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2019-00456',
+      tin: '10284736591',
       businessName: 'Gorilla Gold Mining SARL',
       sector: 'MINING',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2020-00789',
+      tin: '10573829461',
       businessName: 'Coopérative Caféiculteurs du Kivu',
       sector: 'AGRICULTURE',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2018-01011',
+      tin: '10192837465',
       businessName: 'Grands Lacs Commerce SARL',
       sector: 'COMMERCE',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2022-01213',
+      tin: '10847362910',
       businessName: 'Virunga Trading Company SARL',
       sector: 'COMMERCE',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2017-01415',
+      tin: '10362748591',
       businessName: 'Hôtel Karibu Goma',
       sector: 'HOSPITALITY',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2023-01617',
+      tin: '10748291637',
       businessName: 'Trans-Kivu Transport SARL',
       sector: 'TRANSPORT',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2020-01819',
+      tin: '10293847561',
       businessName: 'Bâtisseurs du Kivu SARL',
       sector: 'CONSTRUCTION',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2021-02021',
+      tin: '10473829165',
       businessName: 'Kivu Digital Services SARL',
       sector: 'SERVICES',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2016-02223',
+      tin: '10584726391',
       businessName: 'Pharmacie Heal Congo SARL',
       sector: 'HEALTH',
       status: 'ACTIVE',
     },
     {
-      tin: 'NK-2019-02425',
+      tin: '10192738465',
       businessName: 'Imprimerie Virunga SARL',
       sector: 'SERVICES',
       status: 'INACTIVE',
     },
     {
-      tin: 'NK-2022-02627',
+      tin: '10847293615',
       businessName: 'Agro-Kivu Distributions SARL',
       sector: 'AGRICULTURE',
       status: 'ACTIVE',
@@ -204,130 +205,259 @@ async function main() {
   // ---------------------------------------------------------------------------
   // Tax Periods
   // ---------------------------------------------------------------------------
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-07',
+      name: 'July 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-07-01'),
+      endDate: new Date('2025-07-31'),
+      filingDeadline: new Date('2025-08-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-08',
+      name: 'August 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-08-01'),
+      endDate: new Date('2025-08-31'),
+      filingDeadline: new Date('2025-09-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-09',
+      name: 'September 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-09-01'),
+      endDate: new Date('2025-09-30'),
+      filingDeadline: new Date('2025-10-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-10',
+      name: 'October 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-10-01'),
+      endDate: new Date('2025-10-31'),
+      filingDeadline: new Date('2025-11-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-11',
+      name: 'November 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-11-01'),
+      endDate: new Date('2025-11-30'),
+      filingDeadline: new Date('2025-12-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2025-12',
+      name: 'December 2025',
+      type: 'MONTHLY',
+      startDate: new Date('2025-12-01'),
+      endDate: new Date('2025-12-31'),
+      filingDeadline: new Date('2026-01-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2026-01',
+      name: 'January 2026',
+      type: 'MONTHLY',
+      startDate: new Date('2026-01-01'),
+      endDate: new Date('2026-01-31'),
+      filingDeadline: new Date('2026-02-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2026-02',
+      name: 'February 2026',
+      type: 'MONTHLY',
+      startDate: new Date('2026-02-01'),
+      endDate: new Date('2026-02-28'),
+      filingDeadline: new Date('2026-03-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
+  await prisma.taxPeriod.create({
+    data: {
+      id: 'period-2026-03',
+      name: 'March 2026',
+      type: 'MONTHLY',
+      startDate: new Date('2026-03-01'),
+      endDate: new Date('2026-03-31'),
+      filingDeadline: new Date('2026-04-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
+    },
+  });
+
   const q1Period = await prisma.taxPeriod.create({
     data: {
       id: 'period-q1-2026',
-      name: 'Q1 2026 — Janvier à Mars',
-      type: 'QUARTERLY',
-      startDate: new Date('2026-01-01'),
-      endDate: new Date('2026-03-31'),
-      filingDeadline: new Date('2026-04-30'),
-      taxTypes: ['PATENTE'],
-      isActive: false,
-      createdById: officer1.id,
+      name: 'April 2026',
+      type: 'MONTHLY',
+      startDate: new Date('2026-04-01'),
+      endDate: new Date('2026-04-30'),
+      filingDeadline: new Date('2026-05-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
+      isActive: true,
     },
   });
 
   const q2Period = await prisma.taxPeriod.create({
     data: {
       id: 'period-q2-2026',
-      name: 'Q2 2026 — Avril à Juin',
-      type: 'QUARTERLY',
-      startDate: new Date('2026-04-01'),
-      endDate: new Date('2026-06-30'),
-      filingDeadline: new Date('2026-07-31'),
-      taxTypes: ['PATENTE'],
+      name: 'May 2026',
+      type: 'MONTHLY',
+      startDate: new Date('2026-05-01'),
+      endDate: new Date('2026-05-31'),
+      filingDeadline: new Date('2026-06-15'),
+      taxTypes: SUPPORTED_TAX_TYPES,
       isActive: true,
-      createdById: officer1.id,
     },
   });
 
   console.log('✓ Tax periods created');
 
   // ---------------------------------------------------------------------------
-  // Tax Rules — fixed Patente amounts per sector (USD)
+  // Tax Rules — flat amounts per tax type, modifiable by officers
   // ---------------------------------------------------------------------------
-  const taxAmountBySector: Record<string, number> = {
-    MINING: 500,
-    AGRICULTURE: 75,
-    COMMERCE: 150,
-    HOSPITALITY: 250,
-    TRANSPORT: 120,
-    CONSTRUCTION: 200,
-    SERVICES: 100,
-    HEALTH: 180,
-  };
-
-  const taxRulesData = [
-    { sector: 'MINING', name: 'Patente Secteur Minier' },
-    { sector: 'AGRICULTURE', name: 'Patente Secteur Agriculture' },
-    { sector: 'COMMERCE', name: 'Patente Secteur Commerce' },
-    { sector: 'HOSPITALITY', name: 'Patente Secteur Hôtellerie' },
-    { sector: 'TRANSPORT', name: 'Patente Secteur Transport' },
-    { sector: 'CONSTRUCTION', name: 'Patente Secteur Construction' },
-    { sector: 'SERVICES', name: 'Patente Secteur Services' },
-    { sector: 'HEALTH', name: 'Patente Secteur Santé' },
+  const globalTaxRules = [
+    {
+      id: 'rule-vat',
+      taxType: 'VAT',
+      name: 'Value Added Tax (VAT)',
+      flatAmount: 200,
+      penaltyRate: 0.1,
+    },
+    {
+      id: 'rule-paye',
+      taxType: 'PAYE',
+      name: 'Pay-As-You-Earn (PAYE)',
+      flatAmount: 150,
+      penaltyRate: 0.1,
+    },
+    {
+      id: 'rule-wht',
+      taxType: 'WHT',
+      name: 'Withholding Tax (WHT)',
+      flatAmount: 100,
+      penaltyRate: 0.1,
+    },
+    {
+      id: 'rule-cit',
+      taxType: 'CIT',
+      name: 'Corporate Income Tax (CIT)',
+      flatAmount: 300,
+      penaltyRate: 0.1,
+    },
+    {
+      id: 'rule-tot',
+      taxType: 'TOT',
+      name: 'Turnover Tax (TOT)',
+      flatAmount: 80,
+      penaltyRate: 0.1,
+    },
   ];
 
-  for (const r of taxRulesData) {
+  const ruleAmounts: Record<string, number> = {};
+
+  for (const r of globalTaxRules) {
     await prisma.taxRule.create({
       data: {
-        id: `rule-${r.sector.toLowerCase()}`,
-        taxType: 'PATENTE',
+        id: r.id,
+        taxType: r.taxType,
         name: r.name,
-        condition: { sector: r.sector },
-        flatAmount: taxAmountBySector[r.sector],
+        condition: {},
+        flatAmount: r.flatAmount,
+        penaltyRate: r.penaltyRate,
         applicableFrom: new Date('2026-01-01'),
         priority: 1,
         isActive: true,
         createdById: officer1.id,
-        taxPeriodId: q1Period.id,
       },
     });
+    ruleAmounts[r.taxType] = r.flatAmount;
   }
 
   console.log('✓ Tax rules created');
 
   // ---------------------------------------------------------------------------
-  // Q1 Declarations — active taxpayers only
-  // 8 SUBMITTED, 2 DRAFT (Kivu Digital + Agro-Kivu)
+  // April 2026 Declarations — 8 taxpayers filed (6 PAID, 2 SUBMITTED)
   // ---------------------------------------------------------------------------
   const activeTaxpayers = taxpayers.filter(
     (tp) => taxpayerData.find((t) => t.tin === tp.tin)!.status === 'ACTIVE',
   );
 
-  const submittedDeclarations: Array<{ id: string; taxpayerId: string }> = [];
+  const submittedDeclarations: Array<{
+    id: string;
+    taxpayerId: string;
+    amount: number;
+  }> = [];
 
   for (let i = 0; i < 8; i++) {
     const tp = activeTaxpayers[i];
-    const sector = taxpayerData.find((t) => t.tin === tp.tin)!.sector;
+    const taxType = SUPPORTED_TAX_TYPES[i % SUPPORTED_TAX_TYPES.length];
+    const amount = ruleAmounts[taxType];
+    const rule = globalTaxRules.find((r) => r.taxType === taxType)!;
     const decl = await prisma.declaration.create({
       data: {
         taxpayerId: tp.id,
         taxPeriodId: q1Period.id,
         status: 'SUBMITTED',
-        calculatedTaxAmount: taxAmountBySector[sector],
+        calculatedTaxAmount: amount,
+        penaltyAmount: 0,
+        isLate: false,
+        taxType,
         taxBreakdown: {
-          rule: `Patente ${sector}`,
-          amount: taxAmountBySector[sector],
-          currency: 'USD',
+          rule: rule.name,
+          taxType,
+          flatAmount: amount,
+          penaltyRate: rule.penaltyRate,
         },
         supportingDocuments: [],
         submittedAt: new Date(`2026-04-${String(10 + i).padStart(2, '0')}`),
       },
     });
-    submittedDeclarations.push({ id: decl.id, taxpayerId: decl.taxpayerId });
-  }
-
-  for (const tp of activeTaxpayers.slice(8)) {
-    const sector = taxpayerData.find((t) => t.tin === tp.tin)!.sector;
-    await prisma.declaration.create({
-      data: {
-        taxpayerId: tp.id,
-        taxPeriodId: q1Period.id,
-        status: 'DRAFT',
-        calculatedTaxAmount: taxAmountBySector[sector],
-        taxBreakdown: {
-          rule: `Patente ${sector}`,
-          amount: taxAmountBySector[sector],
-          currency: 'USD',
-        },
-        supportingDocuments: [],
-      },
+    submittedDeclarations.push({
+      id: decl.id,
+      taxpayerId: decl.taxpayerId,
+      amount,
     });
   }
 
-  console.log('✓ Q1 declarations created');
+  console.log('✓ April 2026 declarations created');
 
   // ---------------------------------------------------------------------------
   // Remittances
@@ -356,7 +486,6 @@ async function main() {
 
   // ---------------------------------------------------------------------------
   // Collections — 6 of 8 submitted declarations collected
-  // 2 remain OUTSTANDING (submittedDeclarations[6] and [7])
   // ---------------------------------------------------------------------------
   const collectionsConfig = [
     { declIdx: 0, agent: agent1, remittance: remittance1, date: '2026-04-20' },
@@ -378,16 +507,12 @@ async function main() {
   for (let i = 0; i < collectionsConfig.length; i++) {
     const c = collectionsConfig[i];
     const decl = submittedDeclarations[c.declIdx];
-    const sector = taxpayerData.find(
-      (t) => taxpayers.find((tp) => tp.id === decl.taxpayerId)?.tin === t.tin,
-    )!.sector;
-    const amount = taxAmountBySector[sector];
     const col = await prisma.collection.create({
       data: {
         agentId: c.agent.id,
         declarationId: decl.id,
         taxpayerId: decl.taxpayerId,
-        amount,
+        amount: decl.amount,
         method: i % 2 === 0 ? 'CASH' : 'MOBILE_MONEY',
         referenceNumber: `COL-2026-${String(1000 + i).padStart(6, '0')}`,
         status: 'COMPLETED',
@@ -399,7 +524,7 @@ async function main() {
       id: col.id,
       taxpayerId: col.taxpayerId,
       declarationId: col.declarationId,
-      amount,
+      amount: decl.amount,
       collectedAt: new Date(c.date),
     });
   }
@@ -418,6 +543,14 @@ async function main() {
       collectionCount: 3,
     },
   });
+
+  // Mark collected declarations as PAID
+  for (const col of collections) {
+    await prisma.declaration.update({
+      where: { id: col.declarationId },
+      data: { status: 'PAID' },
+    });
+  }
 
   console.log('✓ Collections and remittances created');
 
@@ -449,17 +582,6 @@ async function main() {
     });
   }
 
-  for (const tp of activeTaxpayers.slice(8)) {
-    await prisma.complianceRecord.create({
-      data: {
-        taxpayerId: tp.id,
-        taxPeriodId: q1Period.id,
-        status: 'NON_FILER',
-        flaggedAt: new Date('2026-05-01'),
-      },
-    });
-  }
-
   const inactiveTaxpayer = taxpayers.find(
     (tp) => taxpayerData.find((t) => t.tin === tp.tin)!.status === 'INACTIVE',
   )!;
@@ -480,17 +602,23 @@ async function main() {
   // ---------------------------------------------------------------------------
   for (let i = 0; i < 3; i++) {
     const tp = activeTaxpayers[i];
-    const sector = taxpayerData.find((t) => t.tin === tp.tin)!.sector;
+    const taxType = SUPPORTED_TAX_TYPES[i % SUPPORTED_TAX_TYPES.length];
+    const amount = ruleAmounts[taxType];
+    const rule = globalTaxRules.find((r) => r.taxType === taxType)!;
     await prisma.declaration.create({
       data: {
         taxpayerId: tp.id,
         taxPeriodId: q2Period.id,
         status: 'SUBMITTED',
-        calculatedTaxAmount: taxAmountBySector[sector],
+        calculatedTaxAmount: amount,
+        penaltyAmount: 0,
+        isLate: false,
+        taxType,
         taxBreakdown: {
-          rule: `Patente ${sector}`,
-          amount: taxAmountBySector[sector],
-          currency: 'USD',
+          rule: rule.name,
+          taxType,
+          flatAmount: amount,
+          penaltyRate: rule.penaltyRate,
         },
         supportingDocuments: [],
         submittedAt: new Date('2026-05-05'),
@@ -499,6 +627,261 @@ async function main() {
   }
 
   console.log('✓ Q2 early declarations created');
+
+  // ---------------------------------------------------------------------------
+  // Kivu Digital Services — 20 PAID declarations across historical months
+  // ---------------------------------------------------------------------------
+  const kivuDigital = activeTaxpayers[8];
+
+  const kivuDeclarations = [
+    // July 2025
+    {
+      periodId: 'period-2025-07',
+      taxType: 'VAT',
+      amount: 200,
+      penalty: 20,
+      submittedAt: '2025-08-20',
+      collectedAt: '2025-08-21',
+      method: 'CASH',
+      ref: 'KD-2025-07-001',
+    },
+    {
+      periodId: 'period-2025-07',
+      taxType: 'PAYE',
+      amount: 150,
+      penalty: 15,
+      submittedAt: '2025-08-20',
+      collectedAt: '2025-08-21',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-07-002',
+    },
+    {
+      periodId: 'period-2025-07',
+      taxType: 'WHT',
+      amount: 100,
+      penalty: 10,
+      submittedAt: '2025-08-22',
+      collectedAt: '2025-08-23',
+      method: 'CASH',
+      ref: 'KD-2025-07-003',
+    },
+    // August 2025
+    {
+      periodId: 'period-2025-08',
+      taxType: 'CIT',
+      amount: 300,
+      penalty: 30,
+      submittedAt: '2025-09-18',
+      collectedAt: '2025-09-19',
+      method: 'CASH',
+      ref: 'KD-2025-08-001',
+    },
+    {
+      periodId: 'period-2025-08',
+      taxType: 'TOT',
+      amount: 80,
+      penalty: 8,
+      submittedAt: '2025-09-18',
+      collectedAt: '2025-09-19',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-08-002',
+    },
+    {
+      periodId: 'period-2025-08',
+      taxType: 'VAT',
+      amount: 200,
+      penalty: 20,
+      submittedAt: '2025-09-20',
+      collectedAt: '2025-09-21',
+      method: 'CASH',
+      ref: 'KD-2025-08-003',
+    },
+    // September 2025
+    {
+      periodId: 'period-2025-09',
+      taxType: 'PAYE',
+      amount: 150,
+      penalty: 15,
+      submittedAt: '2025-10-17',
+      collectedAt: '2025-10-18',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-09-001',
+    },
+    {
+      periodId: 'period-2025-09',
+      taxType: 'WHT',
+      amount: 100,
+      penalty: 10,
+      submittedAt: '2025-10-17',
+      collectedAt: '2025-10-18',
+      method: 'CASH',
+      ref: 'KD-2025-09-002',
+    },
+    // October 2025
+    {
+      periodId: 'period-2025-10',
+      taxType: 'CIT',
+      amount: 300,
+      penalty: 30,
+      submittedAt: '2025-11-18',
+      collectedAt: '2025-11-19',
+      method: 'CASH',
+      ref: 'KD-2025-10-001',
+    },
+    {
+      periodId: 'period-2025-10',
+      taxType: 'TOT',
+      amount: 80,
+      penalty: 8,
+      submittedAt: '2025-11-18',
+      collectedAt: '2025-11-19',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-10-002',
+    },
+    {
+      periodId: 'period-2025-10',
+      taxType: 'VAT',
+      amount: 200,
+      penalty: 20,
+      submittedAt: '2025-11-20',
+      collectedAt: '2025-11-21',
+      method: 'CASH',
+      ref: 'KD-2025-10-003',
+    },
+    // November 2025
+    {
+      periodId: 'period-2025-11',
+      taxType: 'PAYE',
+      amount: 150,
+      penalty: 15,
+      submittedAt: '2025-12-18',
+      collectedAt: '2025-12-19',
+      method: 'CASH',
+      ref: 'KD-2025-11-001',
+    },
+    {
+      periodId: 'period-2025-11',
+      taxType: 'WHT',
+      amount: 100,
+      penalty: 10,
+      submittedAt: '2025-12-18',
+      collectedAt: '2025-12-19',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-11-002',
+    },
+    // December 2025
+    {
+      periodId: 'period-2025-12',
+      taxType: 'CIT',
+      amount: 300,
+      penalty: 30,
+      submittedAt: '2026-01-17',
+      collectedAt: '2026-01-18',
+      method: 'CASH',
+      ref: 'KD-2025-12-001',
+    },
+    {
+      periodId: 'period-2025-12',
+      taxType: 'TOT',
+      amount: 80,
+      penalty: 8,
+      submittedAt: '2026-01-17',
+      collectedAt: '2026-01-18',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2025-12-002',
+    },
+    // January 2026
+    {
+      periodId: 'period-2026-01',
+      taxType: 'VAT',
+      amount: 200,
+      penalty: 20,
+      submittedAt: '2026-02-18',
+      collectedAt: '2026-02-19',
+      method: 'CASH',
+      ref: 'KD-2026-01-001',
+    },
+    {
+      periodId: 'period-2026-01',
+      taxType: 'PAYE',
+      amount: 150,
+      penalty: 15,
+      submittedAt: '2026-02-18',
+      collectedAt: '2026-02-19',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2026-01-002',
+    },
+    // February 2026
+    {
+      periodId: 'period-2026-02',
+      taxType: 'VAT',
+      amount: 200,
+      penalty: 20,
+      submittedAt: '2026-03-20',
+      collectedAt: '2026-03-21',
+      method: 'CASH',
+      ref: 'KD-2026-02-001',
+    },
+    {
+      periodId: 'period-2026-02',
+      taxType: 'WHT',
+      amount: 100,
+      penalty: 10,
+      submittedAt: '2026-03-20',
+      collectedAt: '2026-03-21',
+      method: 'MOBILE_MONEY',
+      ref: 'KD-2026-02-002',
+    },
+    // March 2026
+    {
+      periodId: 'period-2026-03',
+      taxType: 'TOT',
+      amount: 80,
+      penalty: 8,
+      submittedAt: '2026-04-18',
+      collectedAt: '2026-04-19',
+      method: 'CASH',
+      ref: 'KD-2026-03-001',
+    },
+  ];
+
+  for (const d of kivuDeclarations) {
+    const rule = globalTaxRules.find((r) => r.taxType === d.taxType)!;
+    const decl = await prisma.declaration.create({
+      data: {
+        taxpayerId: kivuDigital.id,
+        taxPeriodId: d.periodId,
+        status: 'PAID',
+        calculatedTaxAmount: d.amount,
+        penaltyAmount: d.penalty,
+        isLate: true,
+        taxType: d.taxType,
+        taxBreakdown: {
+          rule: rule.name,
+          taxType: d.taxType,
+          flatAmount: d.amount,
+          penaltyRate: rule.penaltyRate,
+        },
+        supportingDocuments: [],
+        submittedAt: new Date(d.submittedAt),
+      },
+    });
+
+    await prisma.collection.create({
+      data: {
+        agentId: agent1.id,
+        declarationId: decl.id,
+        taxpayerId: kivuDigital.id,
+        amount: d.amount + d.penalty,
+        method: d.method,
+        referenceNumber: d.ref,
+        status: 'COMPLETED',
+        collectedAt: new Date(d.collectedAt),
+      },
+    });
+  }
+
+  console.log('✓ Kivu Digital declarations created (20 PAID)');
   console.log('\nSeed complete.');
   console.log('  Default password for all accounts: Password@123');
 }

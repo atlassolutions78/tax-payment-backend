@@ -18,8 +18,8 @@ enum Role {
 }
 
 enum DeclarationStatus {
-  DRAFT
   SUBMITTED
+  PAID
 }
 
 enum CollectionStatus {
@@ -100,8 +100,8 @@ model TaxPeriod {
   filingDeadline  DateTime
   taxTypes        String[]
   isActive        Boolean       @default(true)
-  createdById     String
-  createdBy       User          @relation(fields: [createdById], references: [id])
+  createdById     String?
+  createdBy       User?         @relation(fields: [createdById], references: [id])
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -121,6 +121,7 @@ model TaxRule {
   flatAmount      Decimal? @db.Decimal(12, 2)
   applicableFrom  DateTime
   applicableTo    DateTime?
+  penaltyRate     Decimal  @default(0.10) @db.Decimal(5, 4)
   priority        Int      @default(0)
   isActive        Boolean  @default(true)
   createdById     String
@@ -143,10 +144,14 @@ model Declaration {
   taxpayer            Taxpayer          @relation(fields: [taxpayerId], references: [id])
   taxPeriodId         String
   taxPeriod           TaxPeriod         @relation(fields: [taxPeriodId], references: [id])
-  status              DeclarationStatus @default(DRAFT)
+  taxType             String
+  status              DeclarationStatus @default(SUBMITTED)
   calculatedTaxAmount Decimal?          @db.Decimal(15, 2)
   taxBreakdown        Json?
   supportingDocuments String[]
+  currency            String            @default("USD")
+  isLate              Boolean           @default(false)
+  penaltyAmount       Decimal           @default(0) @db.Decimal(15, 2)
   submittedAt         DateTime?
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
@@ -154,7 +159,7 @@ model Declaration {
   collections       Collection[]
   complianceRecords ComplianceRecord[]
 
-  @@unique([taxpayerId, taxPeriodId])
+  @@unique([taxpayerId, taxPeriodId, taxType])
   @@map("declarations")
 }
 

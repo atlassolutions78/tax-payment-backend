@@ -5,12 +5,28 @@ import { PrismaService } from '../prisma/prisma.service';
 export class TaxRulesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  findBySector(sector: string) {
+  async findActiveTaxTypes(): Promise<string[]> {
+    const rules = await this.prisma.taxRule.findMany({
+      where: { isActive: true },
+      select: { taxType: true },
+      distinct: ['taxType'],
+    });
+    return rules.map((r) => r.taxType);
+  }
+
+  findForDeclaration(taxType: string, sector: string) {
+    if (taxType === 'PATENTE') {
+      return this.prisma.taxRule.findFirst({
+        where: {
+          isActive: true,
+          taxType,
+          condition: { path: ['sector'], equals: sector },
+        },
+        orderBy: { priority: 'desc' },
+      });
+    }
     return this.prisma.taxRule.findFirst({
-      where: {
-        isActive: true,
-        condition: { path: ['sector'], equals: sector },
-      },
+      where: { isActive: true, taxType },
       orderBy: { priority: 'desc' },
     });
   }
