@@ -8,5 +8,6 @@ import { TaxpayersModule } from '../taxpayers/taxpayers.module';
   imports: [TaxpayersModule],
   controllers: [CollectionsController],
   providers: [CollectionsRepository, CollectionsService],
+  exports: [CollectionsRepository],
 })
 export class CollectionsModule {}

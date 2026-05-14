@@ -31,4 +31,25 @@ export class CollectionsRepository {
       include: withDetails,
     });
   }
+
+  async findByAgent(
+    agentId: string,
+    pagination: { page: number; limit: number },
+  ) {
+    const where = { agentId };
+
+    const { page, limit } = pagination;
+    const [data, total] = await Promise.all([
+      this.prisma.collection.findMany({
+        where,
+        include: withDetails,
+        orderBy: { collectedAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.collection.count({ where }),
+    ]);
+
+    return { data, total, page, limit };
+  }
 }
