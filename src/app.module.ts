@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { DeclarationsModule } from './declarations/declarations.module';
 import { SchedulerModule } from './scheduler/scheduler.module';
 import { CollectionsModule } from './collections/collections.module';
+import { RemittancesModule } from './remittances/remittances.module';
+import { GovernmentModule } from './government/government.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { CollectionsModule } from './collections/collections.module';
     DeclarationsModule,
     SchedulerModule,
     CollectionsModule,
+    RemittancesModule,
+    GovernmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

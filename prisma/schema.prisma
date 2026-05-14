@@ -22,12 +22,6 @@ enum DeclarationStatus {
   PAID
 }
 
-enum CollectionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-}
-
 enum RemittanceStatus {
   OPEN
   SUBMITTED
@@ -56,6 +50,7 @@ model User {
   id           String   @id @default(uuid())
   email        String   @unique
   passwordHash String
+  name         String   @default("")
   role         Role
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -192,8 +187,7 @@ model Collection {
   amount          Decimal          @db.Decimal(15, 2)
   method          String
   referenceNumber String           @unique
-  status          CollectionStatus @default(PENDING)
-  collectedAt     DateTime?
+  collectedAt     DateTime
   receiptUrl      String?
   remittanceId    String?
   remittance      Remittance?      @relation(fields: [remittanceId], references: [id])

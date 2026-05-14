@@ -35,6 +35,7 @@ export class AuthService {
         accessToken: this.jwt.sign(payload),
         user: {
           id: user.id,
+          name: user.name,
           email: user.email,
           role: user.role,
           ...(user.agent && {
@@ -64,6 +65,7 @@ export class AuthService {
         accessToken: this.jwt.sign(payload),
         user: {
           id: taxpayer.user.id,
+          name: taxpayer.user.name,
           email: taxpayer.user.email,
           role: taxpayer.user.role,
           taxpayerId: taxpayer.id,
@@ -80,6 +82,7 @@ export class AuthService {
 
     return {
       id: user.id,
+      name: user.name,
       email: user.email,
       role: user.role,
       ...(user.taxpayer && {
